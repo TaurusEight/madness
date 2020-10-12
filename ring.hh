@@ -17,6 +17,7 @@ namespace mad {
 
     ring();
     ring( list_t );
+    ring( const ring& );  // copy constructor
     ~ring();
 
     friend std::ostream& operator<<( std::ostream&, const ring& );

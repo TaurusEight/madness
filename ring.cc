@@ -19,16 +19,40 @@ ring::ring( list_t IL ) : head( nullptr ) {
 };  // end constructor
 
 
+// copy constructor
+//-----------------------------------------------------------------------------
+ring::ring( const ring& R ) : head( nullptr ) {
+
+  if ( R.head == nullptr ) return;  // nothing to do
+  node* current = R.head;
+  do {
+
+    current = current->next_col;
+  } while( *current != *(R.head) );
+
+};  // end copy constructor
+
 //-----------------------------------------------------------------------------
 ring::~ring( ) {
-
-  cout << "ring::~ring " << ( head == nullptr ? "null" : "not null" ) << endl;
 
   if ( head == nullptr ) return;
   nuke( head );
 
 };  // end destructor
 
+
+//-----------------------------------------------------------------------------
+node* ring::build_list( const node* N ) const {
+
+  node* start = N;
+  node* current = start;
+
+  do {
+  } while( *current != *start );
+
+  return start;
+
+};  // end build_list
 
 //-----------------------------------------------------------------------------
 node* ring::build_list( initializer_list< int > L ) const {
@@ -39,7 +63,6 @@ node* ring::build_list( initializer_list< int > L ) const {
 
   for ( auto& value : L ) {
     current = new node( value );
-    cout << ' ' << value << ' ';
     if ( start != nullptr ) {
       do { last = start->next_row; } while ( *last->next_row != *start );
       current->next_row = last->next_row;
@@ -77,12 +100,10 @@ node* ring::build( list_t IL ) const {
 
 
   for ( auto& row_list : IL ) {
-    cout << '{';
     current = build_list( row_list );
     if ( result == nullptr ) result = current;
     if ( prev != nullptr ) link_row( prev, current );
     prev = current;
-    cout << '}' << endl;
   };  // end row
 
   return result;
@@ -109,3 +130,31 @@ void ring::nuke( node* current ) {
   nuke_row( current, current );
 
 };  // end nuke
+
+
+//-----------------------------------------------------------------------------
+void output_row( ostream& out, node* start ) {
+
+  node* current = start;
+  do {
+    out << current->value << ' ';
+    current = current->next_row;
+  } while( *current != *start );
+
+};  // end output_row
+
+
+//-----------------------------------------------------------------------------
+ostream& mad::operator<<( ostream& out, const ring& R ) {
+
+  node* current = R.head;
+  do {
+    out << "{ ";
+    output_row( out, current );
+    current = current->next_col;
+    out << '}' << endl;
+  } while( *current != *(R.head) );
+
+  return out;
+
+};  // end operator<< ring
