@@ -1,2 +1,2 @@
 # madness
-Sample code to play with a multi dimensional linked list. 
+Sample C++ code to play with a 2D linked list object.
