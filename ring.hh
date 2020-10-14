@@ -18,18 +18,22 @@ namespace mad {
     ring();
     ring( list_t );
     ring( const ring& );  // copy constructor
+    ring( const ring&& );  // move constructor
     ~ring();
+
+    node* operator=( const ring& );  // copy assignmnet
+    node* operator=( const ring&& );  // move assignment
 
     friend std::ostream& operator<<( std::ostream&, const ring& );
 
   protected:
 
     node* build_list( std::initializer_list< int > ) const;
+    node* build_list( node* ) const;
     void link_row( node*, node* ) const;
     node* build( list_t ) const;
     void nuke_row( node*, node* );
     void nuke( node* );
-
 
   private:
 

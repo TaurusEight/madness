@@ -24,11 +24,17 @@ ring::ring( list_t IL ) : head( nullptr ) {
 ring::ring( const ring& R ) : head( nullptr ) {
 
   if ( R.head == nullptr ) return;  // nothing to do
-  node* current = R.head;
-  do {
+  node* r_current = R.head;
+  node* row = nullptr;
+  node* prev = nullptr;
 
-    current = current->next_col;
-  } while( *current != *(R.head) );
+  do {
+    row = build_list( r_current );
+    if ( head == nullptr ) head = row;
+    if ( prev != nullptr ) link_row( prev, row );
+     prev = row;
+    r_current = r_current->next_col;
+  } while( *r_current != *(R.head) );
 
 };  // end copy constructor
 
@@ -42,13 +48,25 @@ ring::~ring( ) {
 
 
 //-----------------------------------------------------------------------------
-node* ring::build_list( const node* N ) const {
+node* ring::build_list( node* N ) const {
 
-  node* start = N;
-  node* current = start;
+  if ( N == nullptr ) return nullptr;  // nothing to do
+
+  node* target = N;
+  node* last = nullptr;
+  node* current = nullptr;
+  node* start = nullptr;
 
   do {
-  } while( *current != *start );
+    current = new node( target->value );
+    if ( start == nullptr ) start = current;
+    if ( last != nullptr ) {
+      current->next_row = last->next_row;
+      last->next_row = current;
+    };
+    last = current;  // end if / else
+    target = target->next_row;
+  } while( *target != *N );
 
   return start;
 

@@ -12,8 +12,11 @@ using namespace std;
 int main( int, char*[] ) {
 
   mad::ring ring( { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } );
+  cout << "ring" << endl << ring << endl << endl;
 
-  cout << ring << endl;
+  mad::ring circle( ring );
+  cout << endl << "circle" << endl << circle << endl << endl;
+
 
   return 0;  // OK
 
