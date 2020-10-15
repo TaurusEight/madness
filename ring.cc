@@ -23,6 +23,38 @@ ring::ring( list_t IL ) : head( nullptr ) {
 //-----------------------------------------------------------------------------
 ring::ring( const ring& R ) : head( nullptr ) {
 
+  copy( R );
+
+};  // end copy constructor
+
+
+// move constructor
+//-----------------------------------------------------------------------------
+ring::ring( ring&& R ) : head( nullptr ) {
+
+  move( R );
+
+};  // end move constructor
+
+//-----------------------------------------------------------------------------
+ring::~ring( ) {
+
+  nuke( head );
+
+};  // end destructor
+
+
+//-----------------------------------------------------------------------------
+void ring::move( ring& R ) {
+
+  head = R.head;
+  R.head = nullptr;
+
+};  // end move
+
+//-----------------------------------------------------------------------------
+void ring::copy( const ring& R ) {
+
   if ( R.head == nullptr ) return;  // nothing to do
   node* r_current = R.head;
   node* row = nullptr;
@@ -36,16 +68,29 @@ ring::ring( const ring& R ) : head( nullptr ) {
     r_current = r_current->next_col;
   } while( *r_current != *(R.head) );
 
-};  // end copy constructor
+};  // end copy
 
+
+// copy constructor
 //-----------------------------------------------------------------------------
-ring::~ring( ) {
+ring& ring::operator=( const ring& R ) {
 
-  if ( head == nullptr ) return;
   nuke( head );
+  copy( R );
+  return *this;
 
-};  // end destructor
+};  // end operator=
 
+
+// move constructor
+//-----------------------------------------------------------------------------
+ring& ring::operator=( ring&& R ) {
+
+  nuke( head );
+  move( R );
+  return *this;
+
+};  // end operator=
 
 //-----------------------------------------------------------------------------
 node* ring::build_list( node* N ) const {
@@ -164,6 +209,11 @@ void output_row( ostream& out, node* start ) {
 
 //-----------------------------------------------------------------------------
 ostream& mad::operator<<( ostream& out, const ring& R ) {
+
+  if ( R.head == nullptr ) {
+    out << "{ }";
+    return out;
+  };  // end if nullptr
 
   node* current = R.head;
   do {
